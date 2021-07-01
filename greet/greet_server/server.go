@@ -13,7 +13,7 @@ type server struct {
 }
 
 func main() {
-	fmt.Println("yo!")
+	fmt.Println("yo.... server here!")
 
 	lis, err := net.Listen("tcp", "0.0.0.0:50051") // 50051 - default grpc port
 	if err != nil {

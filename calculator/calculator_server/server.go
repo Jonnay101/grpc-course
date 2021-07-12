@@ -26,24 +26,27 @@ func (s *server) Sum(ctc context.Context, req *calculatorpb.SumRequest) (*calcul
 	return res, nil
 }
 
-func (s *server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumDecRequest, stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
-	var k int32 = 2
-	n := req.GetNum()
+func (s *server) PrimeNumberDecomposition(req *calculatorpb.PrimeNumberDecompositionRequest, stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
+	fmt.Printf("PrimeNumberDecomposition called with: %v", req)
 
-	for n > 1 {
-		if n%k == 0 {
-			res := &calculatorpb.PrimeNumDecResponse{
-				Result: k,
+	var divisor int64 = 2
+	num := req.GetNum()
+
+	for num > 1 {
+		if num%divisor == 0 {
+			res := &calculatorpb.PrimeNumberDecompositionResponse{
+				PrimeFactor: divisor,
 			}
 
 			if err := stream.Send(res); err != nil {
 				return err
 			}
 
-			n = n / k
-		} else {
-			k++
+			num = num / divisor
+			continue
 		}
+
+		divisor++
 	}
 
 	return nil

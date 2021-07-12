@@ -20,10 +20,12 @@ func main() {
 	c := calculatorpb.NewCalculatorServiceClient(cc)
 
 	// doUnarySum(c, 12, 11)
-	doPrimeNumberDecomposition(c, 120)
+	doServerStreaming(c, 125972)
 }
 
 func doUnarySum(c calculatorpb.CalculatorServiceClient, num1, num2 int32) {
+	fmt.Println("Sum called...")
+
 	req := &calculatorpb.SumRequest{
 		Num1: num1,
 		Num2: num2,
@@ -37,22 +39,24 @@ func doUnarySum(c calculatorpb.CalculatorServiceClient, num1, num2 int32) {
 	fmt.Printf("The sum result is: %d", res.Result)
 }
 
-func doPrimeNumberDecomposition(c calculatorpb.CalculatorServiceClient, num int32) {
-	req := &calculatorpb.PrimeNumDecRequest{
+func doServerStreaming(c calculatorpb.CalculatorServiceClient, num int64) {
+	fmt.Println("PrimeNumberDeomposition called...")
+
+	req := &calculatorpb.PrimeNumberDecompositionRequest{
 		Num: num,
 	}
 
-	res, err := c.PrimeNumberDecomposition(context.Background(), req)
+	resStream, err := c.PrimeNumberDecomposition(context.Background(), req)
 	if err != nil {
 		log.Fatalf("prime number decomposition failed: %v", err)
 	}
 
 	for {
-		num, err := res.Recv()
+		res, err := resStream.Recv()
 		if err == io.EOF {
 			break
 		}
 
-		fmt.Printf("%d, ", num.GetResult())
+		fmt.Printf("%d, ", res.GetPrimeFactor())
 	}
 }

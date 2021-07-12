@@ -13,15 +13,15 @@ message SumResponse {
   int32 result = 1;
 }
 
-message PrimeNumDecRequest {
-  int32 num = 1;
+message PrimeNumberDecompositionRequest {
+  int64 num = 1;
 }
 
-message PrimeNumDecResponse {
-  int32 result = 1;
+message PrimeNumberDecompositionResponse {
+  int64 prime_factor = 1;
 }
 
 service CalculatorService {
   rpc Sum(SumRequest) returns (SumResponse);
-  rpc PrimeNumberDecomposition(PrimeNumDecRequest) returns (stream PrimeNumDecResponse);
+  rpc PrimeNumberDecomposition(PrimeNumberDecompositionRequest) returns (stream PrimeNumberDecompositionResponse);
 }
